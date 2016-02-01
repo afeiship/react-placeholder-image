@@ -1,6 +1,9 @@
 (function (nx, global) {
 
   var $ = nx.$;
+  $.uuid=0;
+  $.isPlainObject = nx.DOMUtil.isPlainObject;
+  $.deserializeValue = nx.DOMUtil.deserializeValue;
   var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
     exp = $.expando = 'Zepto' + (+new Date()), emptyArray = [];
   var overrideApi = ['remove', 'empty'];
@@ -37,7 +40,7 @@
     $.each(node.attributes || emptyArray, function (i, attr) {
       if (attr.name.indexOf('data-') == 0)
         store[camelize(attr.name.replace('data-', ''))] =
-          $.zepto.deserializeValue(attr.value)
+          $.deserializeValue(attr.value)
     });
     return store
   }

@@ -1,1 +1,86 @@
-!function(n,t){function e(n,t){var e=n[h],i=e&&f[e];if(t===r)return i||a(n);if(i){if(t in i)return i[t];var s=o(t);if(s in i)return i[s]}return c.call(u(n),t)}function a(n,t,e){var a=n[h]||(n[h]=++u.uuid),c=f[a]||(f[a]=i(n));return t!==r&&(c[o(t)]=e),c}function i(n){var t={};return u.each(n.attributes||s,function(n,e){0==e.name.indexOf("data-")&&(t[o(e.name.replace("data-",""))]=u.zepto.deserializeValue(e.value))}),t}var r,u=n.$,f={},c=u.fn.data,o=u.camelCase,h=u.expando="Zepto"+ +new Date,s=[],v=["remove","empty"];u.fn.data=function(n,t){return t===r?u.isPlainObject(n)?this.each(function(t,e){u.each(n,function(n,t){a(e,n,t)})}):0 in this?e(this[0],n):r:this.each(function(){a(this,n,t)})},u.fn.removeData=function(n){return"string"==typeof n&&(n=n.split(/\s+/)),this.each(function(){var t=this[h],e=t&&f[t];e&&u.each(n||e,function(t){delete e[n?o(this):t]})})},v.forEach(function(n){var t=u.fn[n];u.fn[n]=function(){var e=this.find("*");return"remove"===n&&(e=e.add(this)),e.removeData(),t.call(this)}})}(nx,nx.GLOBAL);
+(function (nx, global) {
+
+  var $ = nx.$;
+  $.uuid=0;
+  $.isPlainObject = nx.DOMUtil.isPlainObject;
+  $.deserializeValue = nx.DOMUtil.deserializeValue;
+  var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
+    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = [];
+  var overrideApi = ['remove', 'empty'];
+  var undefined;
+
+  // Get value from node:
+  // 1. first try key as given,
+  // 2. then try camelized key,
+  // 3. fall back to reading "data-*" attribute.
+  function getData(node, name) {
+    var id = node[exp], store = id && data[id];
+    if (name === undefined) return store || setData(node);
+    else {
+      if (store) {
+        if (name in store) return store[name];
+        var camelName = camelize(name);
+        if (camelName in store) return store[camelName]
+      }
+      return dataAttr.call($(node), name);
+    }
+  }
+
+  // Store value under camelized key on node
+  function setData(node, name, value) {
+    var id = node[exp] || (node[exp] = ++$.uuid),
+      store = data[id] || (data[id] = attributeData(node));
+    if (name !== undefined) store[camelize(name)] = value;
+    return store
+  }
+
+  // Read all "data-*" attributes from a node
+  function attributeData(node) {
+    var store = {};
+    $.each(node.attributes || emptyArray, function (i, attr) {
+      if (attr.name.indexOf('data-') == 0)
+        store[camelize(attr.name.replace('data-', ''))] =
+          $.deserializeValue(attr.value)
+    });
+    return store
+  }
+
+  $.fn.data = function (name, value) {
+    return value === undefined ?
+      // set multiple values via object
+      $.isPlainObject(name) ?
+        this.each(function (i, node) {
+          $.each(name, function (key, value) {
+            setData(node, key, value)
+          })
+        }) :
+        // get value from first element
+        (0 in this ? getData(this[0], name) : undefined) :
+      // set value on all elements
+      this.each(function () {
+        setData(this, name, value)
+      })
+  };
+
+  $.fn.removeData = function (names) {
+    if (typeof names == 'string') names = names.split(/\s+/);
+    return this.each(function () {
+      var id = this[exp], store = id && data[id];
+      if (store) $.each(names || store, function (key) {
+        delete store[names ? camelize(this) : key];
+      })
+    })
+  };
+
+  // Generate extended `remove` and `empty` functions
+  overrideApi.forEach(function (methodName) {
+    var origFn = $.fn[methodName];
+    $.fn[methodName] = function () {
+      var elements = this.find('*');
+      if (methodName === 'remove') elements = elements.add(this);
+      elements.removeData();
+      return origFn.call(this);
+    }
+  });
+
+}(nx, nx.GLOBAL));

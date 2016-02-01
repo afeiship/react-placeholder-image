@@ -19,7 +19,7 @@
         conf.src + '/Data.js'
       ])
       .pipe(concat('next-dom-data.js'))
-      .pipe(uglify())
+      //.pipe(uglify())
       //.pipe(rename({
       //  extname: '.min.js'
       //}))
