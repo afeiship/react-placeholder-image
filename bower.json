@@ -1,0 +1,30 @@
+{
+  "name": "next-dom-data",
+  "homepage": "https://github.com/afeiship/next-dom-data",
+  "authors": [
+    "afei"
+  ],
+  "description": "Store data method based on next toolkit.",
+  "main": "dist/Event.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "data",
+    "next",
+    "toolkit"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "next-js-core": "*",
+    "next-dom-core": "*"
+  }
+}
