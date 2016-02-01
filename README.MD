@@ -1,7 +1,7 @@
 #next-dom-data
 
 ##description:
-+ Dom event module based on next toolkit.
++ Dom data module based on next toolkit.
 
 ##usage:
 + nx.$(el).data('name','fei')
