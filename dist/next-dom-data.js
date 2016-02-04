@@ -1,9 +1,7 @@
 (function (nx, global) {
 
   var $ = nx.$;
-  $.uuid=0;
-  $.isPlainObject = nx.DOMUtil.isPlainObject;
-  $.deserializeValue = nx.DOMUtil.deserializeValue;
+  $.uuid = 0;
   var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
     exp = $.expando = 'Zepto' + (+new Date()), emptyArray = [];
   var overrideApi = ['remove', 'empty'];
@@ -37,10 +35,10 @@
   // Read all "data-*" attributes from a node
   function attributeData(node) {
     var store = {};
-    $.each(node.attributes || emptyArray, function (i, attr) {
+    nx.each(node.attributes || emptyArray, function (i, attr) {
       if (attr.name.indexOf('data-') == 0)
         store[camelize(attr.name.replace('data-', ''))] =
-          $.deserializeValue(attr.value)
+          nx.deserializeValue(attr.value)
     });
     return store
   }
@@ -48,9 +46,9 @@
   $.fn.data = function (name, value) {
     return value === undefined ?
       // set multiple values via object
-      $.isPlainObject(name) ?
+      nx.isPlainObject(name) ?
         this.each(function (i, node) {
-          $.each(name, function (key, value) {
+          nx.each(name, function (key, value) {
             setData(node, key, value)
           })
         }) :
@@ -66,7 +64,7 @@
     if (typeof names == 'string') names = names.split(/\s+/);
     return this.each(function () {
       var id = this[exp], store = id && data[id];
-      if (store) $.each(names || store, function (key) {
+      if (store) nx.each(names || store, function (key) {
         delete store[names ? camelize(this) : key];
       })
     })
