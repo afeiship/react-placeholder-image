@@ -81,4 +81,9 @@
     }
   });
 
+
+    /**
+     * TODO:添加一个dataset的API for dom,去掉dom里的那个data的API.
+     */
+
 }(nx, nx.GLOBAL));
