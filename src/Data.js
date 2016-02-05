@@ -1,12 +1,12 @@
 (function (nx, global) {
 
-  var $ = nx.$;
-  $.uuid = 0;
-  var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
-    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = [];
-  var overrideApi = ['remove', 'empty'];
   var undefined;
+  var $ = nx.$;
+  var data = {}, camelize = nx.camelCase,
+    exp = $.expando = 'Zepto' + (+new Date()),
+    overrideApi = ['remove', 'empty'];
 
+  $.uuid = 0;
   // Get value from node:
   // 1. first try key as given,
   // 2. then try camelized key,
@@ -20,26 +20,17 @@
         var camelName = camelize(name);
         if (camelName in store) return store[camelName]
       }
-      return dataAttr.call($(node), name);
+      return null;
     }
   }
 
   // Store value under camelized key on node
   function setData(node, name, value) {
     var id = node[exp] || (node[exp] = ++$.uuid),
-      store = data[id] || (data[id] = attributeData(node));
-    if (name !== undefined) store[camelize(name)] = value;
-    return store
-  }
-
-  // Read all "data-*" attributes from a node
-  function attributeData(node) {
-    var store = {};
-    nx.each(node.attributes || emptyArray, function (i, attr) {
-      if (attr.name.indexOf('data-') == 0)
-        store[camelize(attr.name.replace('data-', ''))] =
-          nx.deserializeValue(attr.value)
-    });
+      store = data[id];
+    if (name !== undefined) {
+      store[camelize(name)] = value;
+    }
     return store
   }
 
@@ -57,7 +48,7 @@
       // set value on all elements
       this.each(function () {
         setData(this, name, value)
-      })
+      });
   };
 
   $.fn.removeData = function (names) {
@@ -75,15 +66,13 @@
     var origFn = $.fn[methodName];
     $.fn[methodName] = function () {
       var elements = this.find('*');
-      if (methodName === 'remove') elements = elements.add(this);
+      if (methodName === 'remove') {
+        elements = elements.add(this);
+      }
       elements.removeData();
       return origFn.call(this);
     }
   });
 
-
-    /**
-     * TODO:添加一个dataset的API for dom,去掉dom里的那个data的API.
-     */
 
 }(nx, nx.GLOBAL));
