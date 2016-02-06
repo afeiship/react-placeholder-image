@@ -1,20 +1,21 @@
 (function (nx, global) {
 
-  var undefined;
   var $ = nx.$;
-  var data = {}, camelize = nx.camelCase,
-    exp = $.expando = 'Zepto' + (+new Date()),
-    overrideApi = ['remove', 'empty'];
-
   $.uuid = 0;
+  var data = {}, camelize = nx.camelCase,
+    exp = $.expando = '__nx__' + (+new Date());
+  var overrideApi = ['remove', 'empty'];
+  var undefined;
+
   // Get value from node:
   // 1. first try key as given,
   // 2. then try camelized key,
   // 3. fall back to reading "data-*" attribute.
   function getData(node, name) {
     var id = node[exp], store = id && data[id];
-    if (name === undefined) return store || setData(node);
-    else {
+    if (name === undefined) {
+      return store || setData(node);
+    } else {
       if (store) {
         if (name in store) return store[name];
         var camelName = camelize(name);
@@ -27,10 +28,8 @@
   // Store value under camelized key on node
   function setData(node, name, value) {
     var id = node[exp] || (node[exp] = ++$.uuid),
-      store = data[id];
-    if (name !== undefined) {
-      store[camelize(name)] = value;
-    }
+      store = data[id] || (data[id] = {});
+    if (name !== undefined) store[camelize(name)] = value;
     return store
   }
 
@@ -48,7 +47,7 @@
       // set value on all elements
       this.each(function () {
         setData(this, name, value)
-      });
+      })
   };
 
   $.fn.removeData = function (names) {
@@ -66,13 +65,10 @@
     var origFn = $.fn[methodName];
     $.fn[methodName] = function () {
       var elements = this.find('*');
-      if (methodName === 'remove') {
-        elements = elements.add(this);
-      }
+      if (methodName === 'remove') elements = elements.add(this);
       elements.removeData();
       return origFn.call(this);
     }
   });
-
 
 }(nx, nx.GLOBAL));

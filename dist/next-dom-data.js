@@ -1,48 +1,35 @@
 (function (nx, global) {
 
-  var undefined;
   var $ = nx.$;
-  var data = {}, dataAttr = $.fn.data, camelize = nx.camelCase,
-    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = [];
-  var overrideApi = ['remove', 'empty'];
-
   $.uuid = 0;
+  var data = {}, camelize = nx.camelCase,
+    exp = $.expando = '__nx__' + (+new Date());
+  var overrideApi = ['remove', 'empty'];
+  var undefined;
+
   // Get value from node:
   // 1. first try key as given,
   // 2. then try camelized key,
   // 3. fall back to reading "data-*" attribute.
   function getData(node, name) {
     var id = node[exp], store = id && data[id];
-    if (name === undefined) return store || setData(node);
-    else {
+    if (name === undefined) {
+      return store || setData(node);
+    } else {
       if (store) {
         if (name in store) return store[name];
         var camelName = camelize(name);
         if (camelName in store) return store[camelName]
       }
       return null;
-      //return dataAttr.call($(node), name);
     }
   }
 
   // Store value under camelized key on node
   function setData(node, name, value) {
     var id = node[exp] || (node[exp] = ++$.uuid),
-      store = data[id] || (data[id] = attributeData(node));
-    if (name !== undefined) {
-      store[camelize(name)] = value;
-    }
-    return store
-  }
-
-  // Read all "data-*" attributes from a node
-  function attributeData(node) {
-    var store = {};
-    nx.each(node.attributes || emptyArray, function (i, attr) {
-      if (attr.name.indexOf('data-') == 0)
-        store[camelize(attr.name.replace('data-', ''))] =
-          nx.deserializeValue(attr.value)
-    });
+      store = data[id] || (data[id] = {});
+    if (name !== undefined) store[camelize(name)] = value;
     return store
   }
 
@@ -83,10 +70,5 @@
       return origFn.call(this);
     }
   });
-
-
-  /**
-   * TODO:添加一个dataset的API for dom,去掉dom里的那个data的API.
-   */
 
 }(nx, nx.GLOBAL));
