@@ -1,11 +1,10 @@
 (function (nx, global) {
 
-  var $ = nx.$;
-  $.uuid = 0;
+  var undefined,$ = nx.$;
   var data = {}, camelize = nx.camelCase,
     exp = $.expando = '__nx__' + (+new Date());
   var overrideApi = ['remove', 'empty'];
-  var undefined;
+  $.uuid = 0;
 
   // Get value from node:
   // 1. first try key as given,
