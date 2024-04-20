@@ -1,7 +1,7 @@
 {
   "name": "@jswork/react-placeholder-image",
   "homepage": "https://js.work",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A placeholder image component.",
   "license": "MIT",
   "main": "dist/index.js",
@@ -78,6 +78,13 @@
     "registry": "https://registry.npmjs.org"
   },
   "keywords": [
-    "deprecated"
+    "demo",
+    "dummy",
+    "image",
+    "img",
+    "pimg",
+    "placeholder",
+    "presentation",
+    "react"
   ]
 }
