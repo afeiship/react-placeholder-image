@@ -47,6 +47,18 @@ export type ReactPlaceholderImageProps = {
    * The text color of image.
    */
   color?: string;
+  /**
+   * The device pixel ratio of image.
+   */
+  devicePixelRatio?: number;
+  /**
+   * Whether to make the image full width.
+   */
+  fullWidth?: boolean;
+  /**
+   * Whether to make the image full height.
+   */
+  fullHeight?: boolean;
 } & Omit<HTMLAttributes<HTMLImageElement>, 'width' | 'height' | 'src' | 'alt' | 'role'>;
 
 export default class ReactPlaceholderImage extends Component<ReactPlaceholderImageProps> {
@@ -56,13 +68,26 @@ export default class ReactPlaceholderImage extends Component<ReactPlaceholderIma
     size: 80,
     text: 'preview',
     bg: 'EEEEEE',
-    color: '999999'
+    color: '999999',
+    devicePixelRatio: 1
   };
 
   render() {
-    const { className, size, width, height, text, color, bg, ...props } = this.props;
-    const _width = width || size;
-    const _height = height || size;
+    const {
+      className,
+      size,
+      width,
+      height,
+      devicePixelRatio,
+      text,
+      color,
+      bg,
+      fullWidth,
+      fullHeight,
+      ...props
+    } = this.props;
+    const _width = devicePixelRatio! * (width! || size!);
+    const _height = devicePixelRatio! * (height! || size!);
     const _text = text === true ? randomText() : text;
     const src = `${SOURCE_HOST}/${_width}x${_height}/${bg}/${color}/?text=${_text}`;
 
@@ -73,6 +98,10 @@ export default class ReactPlaceholderImage extends Component<ReactPlaceholderIma
         width={_width}
         height={_height}
         src={src}
+        style={{
+          maxWidth: fullWidth ? '100%' : undefined,
+          maxHeight: fullHeight ? '100%' : undefined
+        }}
         role='presentation'
         alt='Placeholder Image'
         {...props}

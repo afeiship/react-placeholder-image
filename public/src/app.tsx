@@ -20,6 +20,9 @@ export default () => {
       <PImg size={200} text='Hello World' />
       <PImg width={300} height={100} text='Hello World' color='#ff0000' />
       <PImg text size={200} />
+      <div style={{ width: 300, height: 100, margin: '10px auto' }}>
+        <PImg text='Hello World' width={300} height={100} devicePixelRatio={2} fullWidth fullHeight />
+      </div>
     </Container>
   );
 };
